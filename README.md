@@ -1,4 +1,7 @@
-# claude-workflow
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/banner-dark.svg">
+  <img alt="claude-workflow: especificação antes do código, revisão obrigatória e distribuição de modelos" src="docs/assets/banner-light.svg" width="100%">
+</picture>
 
 Plugin para o [Claude Code](https://code.claude.com) que organiza o desenvolvimento em torno de
 três práticas: especificar antes de implementar, revisar código e segurança ao final de toda
@@ -31,19 +34,10 @@ para tarefas que não exigem raciocínio. Este plugin endereça cada uma delas.
 
 ## 2. Fluxo de desenvolvimento
 
-```mermaid
-flowchart TD
-    I[Ideia] -->|analise-mercado| A[Análise de mercado]
-    A -->|veredito favorável| S
-    P[Pedido de funcionalidade] --> S[1. Especificação]
-    B[Defeito relatado] -->|spec-driven fix| C[Causa raiz e emenda da spec]
-    S -->|aprovação| PL[2. Plano]
-    PL -->|aprovação| T[3. Tarefas]
-    C --> T
-    T --> IM[4. Implementação]
-    IM --> R[5. Revisão de código e de segurança]
-    R --> D[Entrega com CHANGELOG e documentação atualizados]
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/fluxo-dark.svg">
+  <img alt="Fluxo em cinco fases: especificação e plano com aprovação do usuário; tarefas, implementação e revisão em execução contínua" src="docs/assets/fluxo-light.svg" width="100%">
+</picture>
 
 Cada fase decide uma classe de questão e não antecipa a seguinte. A especificação descreve
 comportamento observável e não menciona tecnologia; o plano define arquitetura, reuso,
@@ -60,13 +54,10 @@ revisão final permanece obrigatória em qualquer caso.
 
 ## 3. Distribuição de modelos
 
-```mermaid
-flowchart LR
-    O[Opus · advisor] -.->|consulta pontual| M
-    M[Sonnet · high<br/>sessão principal] --> W[worker<br/>Sonnet · medium]
-    M --> E[explorer<br/>Haiku · medium]
-    M --> RS[researcher<br/>Haiku · medium]
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/modelos-dark.svg">
+  <img alt="Opus como advisor consultado em três momentos; sessão principal em Sonnet delega a worker, explorer e researcher" src="docs/assets/modelos-light.svg" width="100%">
+</picture>
 
 A sessão principal planeja, decide e verifica. Subagentes executam trabalho delimitado e
 devolvem apenas a conclusão, o que preserva o contexto da sessão principal. O advisor recebe a
@@ -101,13 +92,13 @@ autonomia. A troca deve ocorrer no início: o cache de prompt é segmentado por 
 
 ### Skills
 
-| Skill | Finalidade |
-|---|---|
-| `spec-driven` | Fluxo completo de especificação a revisão. Também atende correção de defeitos (`fix`) e revisão avulsa (`review`). |
-| `analise-mercado` | Avalia uma ideia antes da construção: concorrência, preços, tendências, lacunas, demanda e riscos. Produz um veredito e uma especificação inicial. |
-| `code-review` | Revisão de correção lógica, design, legibilidade, desempenho e testes. |
-| `security-review` | Revisão adversarial de autorização, injeção, segredos, exposição de dados, autenticação, SSRF, upload e criptografia. |
-| `migracao` | Planejamento de migração de sistemas legados: inventário, estratégia de corte, migração de dados e rollback. |
+| | Skill | Finalidade |
+|:-:|---|---|
+| <img src="docs/assets/icons/spec-driven.svg" width="20" alt=""> | `spec-driven` | Fluxo completo de especificação a revisão. Também atende correção de defeitos (`fix`) e revisão avulsa (`review`). |
+| <img src="docs/assets/icons/analise-mercado.svg" width="20" alt=""> | `analise-mercado` | Avalia uma ideia antes da construção: concorrência, preços, tendências, lacunas, demanda e riscos. Produz um veredito e uma especificação inicial. |
+| <img src="docs/assets/icons/code-review.svg" width="20" alt=""> | `code-review` | Revisão de correção lógica, design, legibilidade, desempenho e testes. |
+| <img src="docs/assets/icons/security-review.svg" width="20" alt=""> | `security-review` | Revisão adversarial de autorização, injeção, segredos, exposição de dados, autenticação, SSRF, upload e criptografia. |
+| <img src="docs/assets/icons/migracao.svg" width="20" alt=""> | `migracao` | Planejamento de migração de sistemas legados: inventário, estratégia de corte, migração de dados e rollback. |
 
 <details>
 <summary>spec-driven</summary>
@@ -156,11 +147,11 @@ entrada e resultado.
 
 ### Agentes
 
-| Agente | Modelo | Ferramentas | Atribuição |
-|---|---|---|---|
-| `worker` | Sonnet, esforço medium | todas | Implementação de uma tarefa já especificada |
-| `explorer` | Haiku, esforço medium | somente leitura | Localização de código, usos e convenções |
-| `researcher` | Haiku, esforço medium | leitura e web | Documentação, changelogs e APIs de terceiros |
+| | Agente | Modelo | Ferramentas | Atribuição |
+|:-:|---|---|---|---|
+| <img src="docs/assets/icons/worker.svg" width="20" alt=""> | `worker` | Sonnet, esforço medium | todas | Implementação de uma tarefa já especificada |
+| <img src="docs/assets/icons/explorer.svg" width="20" alt=""> | `explorer` | Haiku, esforço medium | somente leitura | Localização de código, usos e convenções |
+| <img src="docs/assets/icons/researcher.svg" width="20" alt=""> | `researcher` | Haiku, esforço medium | leitura e web | Documentação, changelogs e APIs de terceiros |
 
 ### Configuração global
 
@@ -264,6 +255,7 @@ claude-workflow/
 ├── .claude-plugin/      manifesto do plugin e do marketplace
 ├── agents/              worker, explorer, researcher
 ├── config/              CLAUDE.md global e settings.example.json
+├── docs/assets/         diagramas e ícones (versões clara e escura)
 ├── scripts/             install.ps1, install.sh
 └── skills/
     ├── spec-driven/

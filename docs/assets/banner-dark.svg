@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="212" viewBox="0 0 960 212" role="img" aria-label="claude-workflow: especificação antes do código, revisão obrigatória e distribuição de modelos">
+  <style>
+    .t { fill: #1F2328; }
+    .m { fill: #59636E; }
+    .rule { stroke: #D1D9E0; }
+    .ic { fill: none; stroke: #C2410C; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+    .mark { fill: #C2410C; }
+    .glyph { fill: none; stroke: #FFFFFF; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+
+      .t { fill: #E6EDF3; }
+      .m { fill: #9198A1; }
+      .rule { stroke: #3D444D; }
+      .ic { stroke: #F0883E; }
+      .mark { fill: #F0883E; }
+      .glyph { stroke: #0D1117; }
+  </style>
+
+  <rect class="mark" x="24" y="34" width="56" height="56" rx="12"/>
+  <g class="glyph" transform="translate(34 44) scale(1.5)">
+    <path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M10 12h5M10 16h5"/>
+  </g>
+
+  <text class="t" x="100" y="66" font-size="30" font-weight="650" letter-spacing="-0.4">claude-workflow</text>
+  <text class="m" x="100" y="90" font-size="14.5">Fluxo de desenvolvimento para o Claude Code: especificação, revisão e distribuição de modelos.</text>
+
+  <line class="rule" x1="24" y1="126" x2="936" y2="126" stroke-width="1"/>
+
+  <g transform="translate(24 146)">
+    <g class="ic"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M10 12h5M10 16h5"/></g>
+    <text class="t" x="36" y="11" font-size="14" font-weight="600">Especificação antes do código</text>
+    <text class="m" x="36" y="31" font-size="12.5">spec, plano e tarefas com aprovação</text>
+  </g>
+  <g transform="translate(336 146)">
+    <g class="ic"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></g>
+    <text class="t" x="36" y="11" font-size="14" font-weight="600">Revisão obrigatória</text>
+    <text class="m" x="36" y="31" font-size="12.5">code-review e security-review sempre</text>
+  </g>
+  <g transform="translate(648 146)">
+    <g class="ic"><circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="19" r="2.2"/><circle cx="19" cy="19" r="2.2"/><path d="M11 7l-5 10M13 7l5 10M7.2 19h9.6"/></g>
+    <text class="t" x="36" y="11" font-size="14" font-weight="600">Distribuição de modelos</text>
+    <text class="m" x="36" y="31" font-size="12.5">Sonnet decide, Haiku lê, Opus aconselha</text>
+  </g>
+</svg>

@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="320" viewBox="0 0 960 320" role="img" aria-label="Fluxo: ideia, pedido ou defeito entram; especificação e plano passam por aprovação; tarefas, implementação e revisão seguem até a entrega">
+  <style>
+    .t { fill: #1F2328; }
+    .m { fill: #59636E; }
+    .a { fill: #C2410C; }
+    .node { fill: #F6F8FA; stroke: #D1D9E0; }
+    .node-accent { fill: #FFF8F2; stroke: #C2410C; }
+    .pill { fill: #FFFFFF; stroke: #D1D9E0; }
+    .line { fill: none; stroke: #8C959F; stroke-width: 1.4; }
+    .bracket { fill: none; stroke: #D1D9E0; stroke-width: 1.2; }
+    .ah { fill: #8C959F; }
+    .gate { fill: #C2410C; }
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace; }
+
+      .t { fill: #E6EDF3; }
+      .m { fill: #9198A1; }
+      .a { fill: #F0883E; }
+      .node { fill: #161B22; stroke: #3D444D; }
+      .node-accent { fill: #1C1410; stroke: #F0883E; }
+      .pill { fill: #0D1117; stroke: #3D444D; }
+      .line { stroke: #6E7681; }
+      .bracket { stroke: #3D444D; }
+      .ah { fill: #6E7681; }
+      .gate { fill: #F0883E; }
+  </style>
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="ah" d="M0 0L10 5L0 10z"/>
+    </marker>
+  </defs>
+
+  <!-- Entradas -->
+  <rect class="pill" x="24" y="24" width="208" height="36" rx="18"/>
+  <text class="t" x="44" y="47" font-size="13" font-weight="600">Ideia</text>
+  <text class="m mono" x="84" y="47" font-size="12">analise-mercado</text>
+
+  <rect class="pill" x="248" y="24" width="200" height="36" rx="18"/>
+  <text class="t" x="268" y="47" font-size="13" font-weight="600">Pedido de funcionalidade</text>
+
+  <rect class="pill" x="470" y="24" width="244" height="36" rx="18"/>
+  <text class="t" x="490" y="47" font-size="13" font-weight="600">Defeito</text>
+  <text class="m mono" x="548" y="47" font-size="12">spec-driven fix</text>
+
+  <path class="line" d="M128 60 L92 150" marker-end="url(#ah)"/>
+  <path class="line" d="M348 60 L156 150" marker-end="url(#ah)"/>
+  <path class="line" d="M592 60 L496 150" marker-end="url(#ah)"/>
+  <text class="m" x="560" y="108" font-size="11.5">causa raiz e emenda da spec</text>
+
+  <!-- Fases -->
+  <rect class="node" x="24" y="150" width="168" height="96" rx="10"/>
+  <text class="a mono" x="40" y="174" font-size="11.5" font-weight="600">01</text>
+  <text class="t" x="40" y="196" font-size="15" font-weight="600">Especificação</text>
+  <text class="m" x="40" y="216" font-size="12">o quê e por quê</text>
+  <text class="m" x="40" y="233" font-size="12">requisitos e aceite</text>
+
+  <rect class="node" x="210" y="150" width="168" height="96" rx="10"/>
+  <text class="a mono" x="226" y="174" font-size="11.5" font-weight="600">02</text>
+  <text class="t" x="226" y="196" font-size="15" font-weight="600">Plano</text>
+  <text class="m" x="226" y="216" font-size="12">arquitetura e reuso</text>
+  <text class="m" x="226" y="233" font-size="12">invariantes, riscos</text>
+
+  <rect class="node" x="396" y="150" width="168" height="96" rx="10"/>
+  <text class="a mono" x="412" y="174" font-size="11.5" font-weight="600">03</text>
+  <text class="t" x="412" y="196" font-size="15" font-weight="600">Tarefas</text>
+  <text class="m" x="412" y="216" font-size="12">ordem e dependências</text>
+  <text class="m" x="412" y="233" font-size="12">verificação real</text>
+
+  <rect class="node" x="582" y="150" width="168" height="96" rx="10"/>
+  <text class="a mono" x="598" y="174" font-size="11.5" font-weight="600">04</text>
+  <text class="t" x="598" y="196" font-size="15" font-weight="600">Implementação</text>
+  <text class="m" x="598" y="216" font-size="12">código e testes</text>
+  <text class="m" x="598" y="233" font-size="12">sem interrupção</text>
+
+  <rect class="node-accent" x="768" y="150" width="168" height="96" rx="10"/>
+  <text class="a mono" x="784" y="174" font-size="11.5" font-weight="600">05</text>
+  <text class="t" x="784" y="196" font-size="15" font-weight="600">Revisão</text>
+  <text class="m mono" x="784" y="216" font-size="11.5">code-review</text>
+  <text class="m mono" x="784" y="233" font-size="11.5">security-review</text>
+
+  <path class="line" d="M192 198 H208" marker-end="url(#ah)"/>
+  <path class="line" d="M378 198 H394" marker-end="url(#ah)"/>
+  <path class="line" d="M564 198 H580" marker-end="url(#ah)"/>
+  <path class="line" d="M750 198 H766" marker-end="url(#ah)"/>
+
+  <!-- Aprovações -->
+  <rect class="gate" x="196" y="193" width="10" height="10" transform="rotate(45 201 198)"/>
+  <rect class="gate" x="382" y="193" width="10" height="10" transform="rotate(45 387 198)"/>
+
+  <!-- Agrupamentos -->
+  <path class="bracket" d="M24 262 V270 H378 V262"/>
+  <rect class="gate" x="64" y="284" width="8" height="8" transform="rotate(45 68 288)"/>
+  <text class="m" x="80" y="292" font-size="12">decisões, com aprovação do usuário</text>
+  <path class="bracket" d="M396 262 V270 H936 V262"/>
+  <text class="m" x="666" y="292" font-size="12" text-anchor="middle">execução contínua até a entrega, com CHANGELOG e documentação atualizados</text>
+</svg>
