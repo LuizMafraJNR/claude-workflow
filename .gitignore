@@ -1,0 +1,6 @@
+*.bak-*
+.env
+.env.*
+*-workspace/
+.DS_Store
+Thumbs.db

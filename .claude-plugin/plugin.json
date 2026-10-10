@@ -1,0 +1,9 @@
+{
+  "name": "claude-workflow",
+  "version": "1.0.0",
+  "description": "Workflow de desenvolvimento com Claude Code: SDD (spec-driven) com code-review e security-review obrigatórios, análise de mercado, migração, e agentes worker/explorer/researcher para distribuir o trabalho entre modelos.",
+  "author": {
+    "name": "Luiz Mafra"
+  },
+  "keywords": ["sdd", "spec-driven", "code-review", "security-review", "subagents", "pt-br"]
+}

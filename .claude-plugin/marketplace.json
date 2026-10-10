@@ -1,0 +1,16 @@
+{
+  "name": "claude-workflow",
+  "owner": {
+    "name": "Luiz Mafra"
+  },
+  "metadata": {
+    "description": "Workflow de desenvolvimento com Claude Code em português: SDD com review obrigatório, análise de mercado, migração e agentes por modelo."
+  },
+  "plugins": [
+    {
+      "name": "claude-workflow",
+      "source": "./",
+      "description": "SDD com review obrigatório, análise de mercado, migração e agentes por modelo."
+    }
+  ]
+}
