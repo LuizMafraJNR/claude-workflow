@@ -1,6 +1,7 @@
 ---
 name: code-review
 description: Revisão de código focada em qualidade, manutenibilidade e sustentabilidade — correção lógica, design/SOLID, legibilidade, performance e cobertura de testes. Use sempre que o usuário pedir para revisar código, revisar um diff, revisar um PR/MR, "dar uma olhada" em mudanças, verificar se um código está bom antes de commitar, ou pedir opinião sobre a qualidade de uma implementação — mesmo que não use a palavra "review". Também use antes de propor um commit de mudança substancial.
+model: opus
 effort: medium
 ---
 

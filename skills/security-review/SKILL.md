@@ -1,6 +1,7 @@
 ---
 name: security-review
 description: Revisão de segurança adversarial de mudanças de código — autenticação, autorização/IDOR, injeção, segredos expostos, exposição de dados sensíveis, SSRF, upload e criptografia. Use sempre que o usuário pedir revisão de segurança, auditoria de vulnerabilidades, "isso está seguro?", verificação antes de subir para produção, ou quando o diff toca autenticação, permissões, queries, entrada de terceiros, upload de arquivo ou manejo de segredos — mesmo que o pedido seja um review genérico.
+model: opus
 effort: medium
 ---
 

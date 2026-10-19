@@ -1,6 +1,7 @@
 ---
 name: spec-driven
 description: Spec-Driven Development — a especificação é o artefato durável e o código é a saída dela. Fluxo em fases (mapear → specify → plan → tasks → implement → review) com artefatos markdown versionados, documentação viva do repositório em docs/ e CHANGELOG.md, e fechamento obrigatório com code-review + security-review. Use sempre que chegar um pedido de desenvolvimento, correção, criação ou alteração de funcionalidade que não seja trivial; quando o usuário pedir para especificar uma feature, escrever ou alterar uma spec, planejar antes de codar, quebrar escopo em tarefas; quando relatar um bug ou comportamento errado em algo já entregue; quando mencionar SDD, spec-driven ou "seguir a spec"; quando existir um documento de proposta/escopo ou uma análise de mercado (analise-mercado) do qual derivar especificações executáveis; e quando um pedido de mudança exigir alterar uma spec já existente antes de tocar no código. Aceita argumento de fase (`/spec-driven <pedido>`, `/spec-driven fix <sintoma>`, `/spec-driven review [feature]`).
+model: opus
 effort: high
 ---
 

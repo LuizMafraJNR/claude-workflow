@@ -1,6 +1,7 @@
 ---
 name: migracao
 description: Planejamento de migração de sistemas, arquiteturas, bancos e plataformas legadas — entender o sistema atual antes de propor o alvo, escolher a estratégia que reduz risco, tratar dados como migração separada, dividir em fases verificáveis com rollback concreto. Use quando a mudança altera fronteiras de comportamento, forma dos dados ou quem consome o sistema: reescrever ou substituir um sistema, trocar de linguagem, banco, cloud, plataforma ou modelo de arquitetura, aposentar um legado, planejar convivência entre sistema novo e antigo, ou levantar o que um sistema antigo faz antes de reconstruí-lo — inclusive quando o usuário descrever isso sem usar a palavra migração ("legado", "monolito para microsserviços", "on-premise para cloud", "portar para", "refazer em", "sair do X e ir pro Y"). NÃO use para atualização de versão de framework, runtime ou dependência — nem quando é troca de major com deprecations a resolver, desde que exista caminho de upgrade documentado —, troca de biblioteca atrás de uma única interface, ou reorganização de código sem mudança de dados nem de consumidores — nesses casos leia o changelog, faça a mudança e rode os testes.
+model: opus
 effort: high
 ---
 

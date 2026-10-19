@@ -32,7 +32,7 @@ para tarefas que não exigem raciocínio. Este plugin endereça cada uma delas.
 |---|---|
 | Implementação sem definição do problema | Fluxo orientado a especificação (spec, plano, tarefas, implementação), com aprovação explícita após a spec e após o plano |
 | Revisão ausente ou opcional | Revisão de código e de segurança obrigatórias ao final de todo fluxo que altera código |
-| Custo desproporcional | Sessão principal em Sonnet; leitura e pesquisa delegadas ao Haiku; Opus como consultor em pontos definidos; contexto mantido pequeno por sessão curta, tarefa pequena por worker e compactação limitada |
+| Custo desproporcional | Sessão principal em Sonnet; leitura e pesquisa delegadas ao Haiku; Opus no advisor e nas skills de especificação, migração e revisão; contexto mantido pequeno por sessão curta, tarefa pequena por worker e compactação limitada |
 
 ## 2. Fluxo de desenvolvimento
 
@@ -65,6 +65,27 @@ A sessão principal planeja, decide e verifica. Subagentes executam trabalho del
 devolvem apenas a conclusão, o que preserva o contexto da sessão principal. O advisor recebe a
 sessão inteira a cada chamada e por isso é consultado em três momentos: antes de um plano,
 diante de erro recorrente e antes de declarar a tarefa concluída.
+
+### Modelo por skill
+
+Cada skill declara no cabeçalho o modelo e o esforço em que roda. As que concentram julgamento
+(especificar, planejar, migrar, revisar) usam Opus; a pesquisa de mercado e o checkpoint de
+contexto usam o modelo da sessão.
+
+| Skill | Modelo | Esforço |
+|---|---|---|
+| `spec-driven` | Opus | high |
+| `migracao` | Opus | high |
+| `code-review` | Opus | medium |
+| `security-review` | Opus | medium |
+| `analise-mercado` | sessão (pesquisa em Haiku, via subagentes) | high |
+| `checkpoint-contexto` | sessão | medium |
+
+O `model` de uma skill vale até o fim do turno que a invocou: o que vier depois dela, como
+as correções após uma revisão, também roda em Opus, e relê todo o contexto da sessão. Por isso
+essas skills rendem mais em sessão curta: `/clear` entre features e revisão logo depois de
+fechar a implementação, não no fim de uma sessão longa. Para usar o modelo da sessão em vez do
+fixo, remova a linha `model:` do cabeçalho da skill.
 
 Preços de referência por milhão de tokens na API da Anthropic (outubro de 2026):
 
@@ -102,6 +123,7 @@ de modelo:
 |---|---|---|
 | Sessão principal que nunca encerra | Contexto de 1 milhão de tokens ou mais; 1.800 chamadas em uma sessão | Uma feature por sessão, `/clear` ao terminar; `autoCompactWindow: 400000` como freio |
 | Worker com escopo de vários lotes de tarefas | 17 de 86 subagentes passaram de 100 chamadas (16 deles `worker`); o maior teve 402 e 700 mil tokens de contexto | Um worker por **tarefa**; `maxTurns: 80`; o worker para num ponto estável e reporta |
+| Skill com modelo fixo em Opus numa sessão grande | Duas sessões com 197 e 342 chamadas em Opus (60 e 118 milhões de tokens de cache lidos), ambas após `security-review` | `/clear` entre features; revisão logo depois de fechar a implementação |
 | Advisor chamado com a sessão inchada | O advisor recebe a conversa inteira a cada chamada | Chamar cedo; uma vez por feature no fim; compactar antes se passar de ~300 mil tokens |
 
 Delegar **não** é o problema: um subagente começa com cerca de 20 mil tokens (mediana medida) e
@@ -152,14 +174,14 @@ permite encerrar uma sessão com `/clear` sem perder o fio.
 
 ### Skills
 
-| | Skill | Finalidade |
-|:-:|---|---|
-| <img src="docs/assets/icons/spec-driven.svg" width="20" alt=""> | `spec-driven` | Fluxo completo de especificação a revisão. Também atende correção de defeitos (`fix`) e revisão avulsa (`review`). |
-| <img src="docs/assets/icons/analise-mercado.svg" width="20" alt=""> | `analise-mercado` | Avalia uma ideia antes da construção: concorrência, preços, tendências, lacunas, demanda e riscos. Produz um veredito e uma especificação inicial. |
-| <img src="docs/assets/icons/code-review.svg" width="20" alt=""> | `code-review` | Revisão de correção lógica, design, legibilidade, desempenho e testes. |
-| <img src="docs/assets/icons/security-review.svg" width="20" alt=""> | `security-review` | Revisão adversarial de autorização, injeção, segredos, exposição de dados, autenticação, SSRF, upload e criptografia. |
-|  | `checkpoint-contexto` | Antes de `/clear` ou `/compact`: confere se decisões, esclarecimentos e próximo passo estão em arquivo, completa o que faltar e entrega um relatório de validação. |
-| <img src="docs/assets/icons/migracao.svg" width="20" alt=""> | `migracao` | Planejamento de migração de sistemas legados: inventário, estratégia de corte, migração de dados e rollback. |
+| | Skill | Modelo | Finalidade |
+|:-:|---|---|---|
+| <img src="docs/assets/icons/spec-driven.svg" width="20" alt=""> | `spec-driven` | Opus, high | Fluxo completo de especificação a revisão. Também atende correção de defeitos (`fix`) e revisão avulsa (`review`). |
+| <img src="docs/assets/icons/analise-mercado.svg" width="20" alt=""> | `analise-mercado` | sessão, high | Avalia uma ideia antes da construção: concorrência, preços, tendências, lacunas, demanda e riscos. Produz um veredito e uma especificação inicial. |
+| <img src="docs/assets/icons/code-review.svg" width="20" alt=""> | `code-review` | Opus, medium | Revisão de correção lógica, design, legibilidade, desempenho e testes. |
+| <img src="docs/assets/icons/security-review.svg" width="20" alt=""> | `security-review` | Opus, medium | Revisão adversarial de autorização, injeção, segredos, exposição de dados, autenticação, SSRF, upload e criptografia. |
+| <img src="docs/assets/icons/checkpoint-contexto.svg" width="20" alt=""> | `checkpoint-contexto` | sessão, medium | Antes de `/clear` ou `/compact`: confere se decisões, esclarecimentos e próximo passo estão em arquivo, completa o que faltar e entrega um relatório de validação. |
+| <img src="docs/assets/icons/migracao.svg" width="20" alt=""> | `migracao` | Opus, high | Planejamento de migração de sistemas legados: inventário, estratégia de corte, migração de dados e rollback. |
 
 <details>
 <summary>spec-driven</summary>
@@ -258,6 +280,7 @@ Para confirmar a instalação, abra uma nova sessão e verifique `/model`, `/eff
 /claude-workflow:spec-driven exportação do relatório de vendas em CSV
 /claude-workflow:spec-driven fix filtro mensal exibe fevereiro em 31/01 após as 21h
 /claude-workflow:spec-driven review
+/claude-workflow:checkpoint-contexto
 ```
 
 As skills de plugin recebem o nome do plugin como prefixo, o que evita conflito com skills
@@ -306,8 +329,8 @@ com o número de fontes consultadas; dimensões irrelevantes para a ideia podem 
 
 Em ordem de impacto: (1) o tamanho do contexto das sessões longas; encerre a feature com
 `/clear` em vez de continuar a conversa; (2) workers com mais de 100 chamadas, sinal de que a
-tarefa era grande demais para um worker; (3) sessão principal em Opus fora dos casos da seção
-3; (4) advisor chamado com a sessão inchada. Os transcritos em `~/.claude/projects/` têm o
+tarefa era grande demais para um worker; (3) sessão em Opus fora dos casos da seção 3, seja por
+`/model opus` ou por uma skill com `model: opus` que continuou o turno com o contexto grande; (4) advisor chamado com a sessão inchada. Os transcritos em `~/.claude/projects/` têm o
 campo `usage` de cada chamada, o que permite medir antes de mudar qualquer configuração. A
 seção 3.1 descreve o que foi medido e corrigido.
 
@@ -338,6 +361,7 @@ claude-workflow/
     ├── analise-mercado/
     ├── code-review/
     ├── security-review/
+    ├── checkpoint-contexto/
     └── migracao/
 ```
 
