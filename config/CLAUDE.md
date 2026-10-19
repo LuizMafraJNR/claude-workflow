@@ -53,8 +53,7 @@ verificação.
 
 **Nunca cortar** (é onde mora a qualidade): spec e plano antes do código, TDD, verificação
 rodada de verdade, `code-review` + `security-review` ao fim de mudança de código, advisor
-antes do plano e antes de declarar pronto, e os revisores que o projeto exige quando o projeto
-manda.
+antes do plano e antes de declarar pronto, e os revisores que o projeto exigir.
 
 ## Como cada subagente funciona (memória e disparo)
 
