@@ -14,6 +14,8 @@ Documentação em português. Licença MIT.
 1. [Visão geral](#1-visão-geral)
 2. [Fluxo de desenvolvimento](#2-fluxo-de-desenvolvimento)
 3. [Distribuição de modelos](#3-distribuição-de-modelos)
+   - [3.1 Onde o custo realmente está](#31-onde-o-custo-realmente-está)
+   - [3.2 Como cada agente funciona: memória e disparo](#32-como-cada-agente-funciona-memória-e-disparo)
 4. [Componentes](#4-componentes)
 5. [Instalação](#5-instalação)
 6. [Uso](#6-uso)
@@ -30,7 +32,7 @@ para tarefas que não exigem raciocínio. Este plugin endereça cada uma delas.
 |---|---|
 | Implementação sem definição do problema | Fluxo orientado a especificação (spec, plano, tarefas, implementação), com aprovação explícita após a spec e após o plano |
 | Revisão ausente ou opcional | Revisão de código e de segurança obrigatórias ao final de todo fluxo que altera código |
-| Custo desproporcional | Sessão principal em Sonnet; leitura e pesquisa delegadas ao Haiku; Opus como consultor em pontos definidos |
+| Custo desproporcional | Sessão principal em Sonnet; leitura e pesquisa delegadas ao Haiku; Opus como consultor em pontos definidos; contexto mantido pequeno por sessão curta, tarefa pequena por worker e compactação limitada |
 
 ## 2. Fluxo de desenvolvimento
 
@@ -85,6 +87,57 @@ Para trabalho rotineiro, Sonnet em `high` é suficiente. Selecione Opus com `/mo
 início da sessão para desenho de arquitetura, investigação de incidente em produção, defeitos
 de concorrência ou transação, migrações de banco de alto risco e sessões longas executadas com
 autonomia. A troca deve ocorrer no início: o cache de prompt é segmentado por modelo.
+
+</details>
+
+### 3.1 Onde o custo realmente está
+
+Cada chamada ao modelo relê o contexto inteiro (do cache). O custo de uma sessão é, portanto,
+aproximadamente **tamanho do contexto × número de chamadas**. Numa sessão com 400 mil tokens
+de contexto, 100 chamadas leem 40 milhões de tokens. Medindo uma semana de uso real (transcritos
+em `~/.claude/projects`), o consumo ficou concentrado em três padrões, nenhum deles a escolha
+de modelo:
+
+| Padrão | Sintoma medido | Correção adotada |
+|---|---|---|
+| Sessão principal que nunca encerra | Contexto de 1 milhão de tokens ou mais; 1.800 chamadas em uma sessão | Uma feature por sessão, `/clear` ao terminar; `autoCompactWindow: 400000` como freio |
+| Worker com escopo de feature inteira | 17 de 86 subagentes passaram de 100 chamadas; o maior teve 402 e 700 mil tokens de contexto | Um worker por **tarefa**; `maxTurns: 80`; o worker para num ponto estável e reporta |
+| Advisor chamado com a sessão inchada | O advisor recebe a conversa inteira a cada chamada | Chamar cedo; uma vez por feature no fim; compactar antes se passar de ~300 mil tokens |
+
+Delegar **não** é o problema: um subagente começa com cerca de 20 mil tokens (mediana medida) e
+devolve só a conclusão, o que mantém a sessão principal pequena. O custo está nos subagentes
+que duram demais.
+
+A economia corta desperdício, não verificação. Permanecem sem exceção: especificação e plano
+antes do código, TDD, verificação executada de verdade, `code-review` e `security-review` ao
+fim de mudança de código, e advisor antes do plano e antes de declarar a tarefa concluída.
+
+**Esforço (`effort`).** `high` fica onde a qualidade se decide: ideação, especificação, plano,
+revisão e depuração. O laço de implementação, quando já existe especificação e plano
+aprovados, roda em `medium`, com o TDD como rede de segurança. Um comando ou skill pode
+declarar isso no próprio cabeçalho (`effort: medium`), e o subagente declara o seu em
+`effort:`, que sobrepõe o da sessão.
+
+### 3.2 Como cada agente funciona: memória e disparo
+
+<details>
+<summary>Contexto, memória e disparo de um subagente</summary>
+
+<br>
+
+| Pergunta | Resposta |
+|---|---|
+| O que o subagente recebe ao iniciar? | O corpo do seu arquivo `.md` como system prompt, os `CLAUDE.md` (global e do projeto), um snapshot do git e **o prompt de delegação** escrito pela sessão principal. Skills só se listadas em `skills:`. |
+| Ele vê a conversa principal? | Não. Contexto isolado: o que não estiver no prompt de delegação, ele não sabe. Por isso o contrato (arquivos, escopo, verificação) vai escrito. |
+| O que volta para a sessão principal? | Apenas a mensagem final. O que o subagente leu e tentou fica fora do contexto principal. |
+| Ele lembra da invocação anterior? | Não. Cada chamada cria uma instância nova. `SendMessage` retoma a mesma instância com todo o histórico (e o custo desse histórico). O campo `memory:` do frontmatter cria um diretório persistente por agente; este plugin não o utiliza. |
+| Como é disparado? | O Claude escolhe pelo campo `description` do agente ou pelo nome citado no prompt. Pode rodar em segundo plano e em paralelo (várias chamadas na mesma mensagem). |
+| Pode criar outro subagente? | Por padrão, sim, até três níveis. `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1` desliga o aninhamento, e o `settings.example.json` já o define. |
+| Quanto custa começar? | Cerca de 20 mil tokens de contexto inicial (mediana medida), em cache. |
+
+A memória **durável** do projeto não fica em nenhum agente nem na conversa: fica na
+especificação, no `tasks.md`, no `CHANGELOG.md` e na documentação do repositório. É isso que
+permite encerrar uma sessão com `/clear` sem perder o fio.
 
 </details>
 
@@ -149,14 +202,15 @@ entrada e resultado.
 
 | | Agente | Modelo | Ferramentas | Atribuição |
 |:-:|---|---|---|---|
-| <img src="docs/assets/icons/worker.svg" width="20" alt=""> | `worker` | Sonnet, esforço medium | todas | Implementação de uma tarefa já especificada |
+| <img src="docs/assets/icons/worker.svg" width="20" alt=""> | `worker` | Sonnet, esforço medium, `maxTurns: 80` | todas | Implementação de **uma** tarefa já especificada; para num ponto estável se estourar o orçamento |
 | <img src="docs/assets/icons/explorer.svg" width="20" alt=""> | `explorer` | Haiku, esforço medium | somente leitura | Localização de código, usos e convenções |
 | <img src="docs/assets/icons/researcher.svg" width="20" alt=""> | `researcher` | Haiku, esforço medium | leitura e web | Documentação, changelogs e APIs de terceiros |
 
 ### Configuração global
 
-O diretório `config/` contém o `CLAUDE.md` global, com a política de delegação, e
-`settings.example.json`, com a seleção de modelos.
+O diretório `config/` contém o `CLAUDE.md` global, com a política de delegação e o orçamento
+de contexto, e `settings.example.json`, com a seleção de modelos, `autoCompactWindow`
+(compactação automática em 400 mil tokens) e `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`.
 
 ## 5. Instalação
 
@@ -234,6 +288,20 @@ normalmente. Para desativá-lo, use `/advisor off`.
 
 A análise executa buscas na web com até seis subagentes em paralelo, em Haiku. O custo cresce
 com o número de fontes consultadas; dimensões irrelevantes para a ideia podem ser omitidas.
+
+</details>
+
+<details>
+<summary>O limite de uso acaba mais rápido do que o esperado. O que verificar?</summary>
+
+<br>
+
+Em ordem de impacto: (1) o tamanho do contexto das sessões longas; encerre a feature com
+`/clear` em vez de continuar a conversa; (2) workers com mais de 100 chamadas, sinal de que a
+tarefa era grande demais para um worker; (3) sessão principal em Opus fora dos casos da seção
+3; (4) advisor chamado com a sessão inchada. Os transcritos em `~/.claude/projects/` têm o
+campo `usage` de cada chamada, o que permite medir antes de mudar qualquer configuração. A
+seção 3.1 descreve o que foi medido e corrigido.
 
 </details>
 

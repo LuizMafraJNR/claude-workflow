@@ -20,7 +20,7 @@ if (-not (Test-Path $claudeMd) -or (Get-Item $claudeMd).Length -eq 0) {
     Write-Host "Você já tem um CLAUDE.md global. O do workflow foi salvo em $alt - junte os dois à mão."
 }
 
-# settings.json: só as chaves de modelo, com backup; o resto do arquivo fica intacto.
+# settings.json: só as chaves de modelo, de compactação e do env, com backup; o resto do arquivo fica intacto.
 $settingsPath = Join-Path $claudeDir "settings.json"
 $example = Get-Content (Join-Path $repoConfig "settings.example.json") -Raw | ConvertFrom-Json
 if (Test-Path $settingsPath) {
@@ -29,7 +29,7 @@ if (Test-Path $settingsPath) {
 } else {
     $settings = New-Object PSObject
 }
-foreach ($key in "model", "effortLevel", "advisorModel") {
+foreach ($key in "model", "effortLevel", "advisorModel", "autoCompactWindow") {
     $settings | Add-Member -NotePropertyName $key -NotePropertyValue $example.$key -Force
 }
 if (-not $settings.modelSettings) {
@@ -37,6 +37,12 @@ if (-not $settings.modelSettings) {
 }
 foreach ($model in $example.modelSettings.PSObject.Properties) {
     $settings.modelSettings | Add-Member -NotePropertyName $model.Name -NotePropertyValue $model.Value -Force
+}
+if (-not $settings.env) {
+    $settings | Add-Member -NotePropertyName env -NotePropertyValue (New-Object PSObject) -Force
+}
+foreach ($var in $example.env.PSObject.Properties) {
+    $settings.env | Add-Member -NotePropertyName $var.Name -NotePropertyValue $var.Value -Force
 }
 $json = $settings | ConvertTo-Json -Depth 20
 [IO.File]::WriteAllText($settingsPath, $json, (New-Object System.Text.UTF8Encoding($false)))

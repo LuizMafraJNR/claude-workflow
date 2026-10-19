@@ -5,5 +5,9 @@
     "claude-sonnet-5-5": { "effortLevel": "high" },
     "claude-opus-5-5": { "effortLevel": "medium" }
   },
-  "advisorModel": "opus"
+  "advisorModel": "opus",
+  "autoCompactWindow": 400000,
+  "env": {
+    "CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH": "1"
+  }
 }

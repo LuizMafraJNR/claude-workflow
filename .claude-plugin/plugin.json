@@ -1,6 +1,6 @@
 {
   "name": "claude-workflow",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Workflow de desenvolvimento com Claude Code: SDD (spec-driven) com code-review e security-review obrigatórios, análise de mercado, migração, e agentes worker/explorer/researcher para distribuir o trabalho entre modelos.",
   "author": {
     "name": "Luiz Mafra"

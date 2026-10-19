@@ -18,7 +18,7 @@ else
   echo "Você já tem um CLAUDE.md global. O do workflow foi salvo em $claude_dir/CLAUDE.workflow.md - junte os dois à mão."
 fi
 
-# settings.json: só as chaves de modelo, com backup; o resto do arquivo fica intacto.
+# settings.json: só as chaves de modelo, de compactação e do env, com backup; o resto do arquivo fica intacto.
 settings="$claude_dir/settings.json"
 if ! command -v jq >/dev/null 2>&1; then
   echo "jq não encontrado. Copie as chaves de $repo_config/settings.example.json para $settings à mão."
