@@ -83,6 +83,8 @@ Passados os dois gates, **tasks, implement e review correm até o fim sem parar.
 
 Se o usuário pedir explicitamente o fluxo inteiro de uma vez, os gates caem; destaque no fim as decisões que você tomou sozinho.
 
+**Implementar em sessão limpa.** Aprovado o plano, o contexto que produziu spec e plano já não é necessário: tudo o que importa está nos arquivos. Antes de o usuário rodar `/clear`, execute a skill `checkpoint-contexto`, que prova que nenhuma decisão ou esclarecimento ficou só na conversa. Depois do `/clear`, a implementação recomeça lendo `spec.md`, `plan.md` e `tasks.md`.
+
 ## Fase 0 — Mapear o repositório
 
 Antes de especificar, você precisa saber o que já existe. Uma spec escrita às cegas contradiz convenções do projeto e propõe reconstruir o que já está lá.

@@ -55,6 +55,22 @@ verificação.
 rodada de verdade, `code-review` + `security-review` ao fim de mudança de código, advisor
 antes do plano e antes de declarar pronto, e os revisores que o projeto exigir.
 
+## Corte de contexto: plano aprovado, checkpoint, `/clear`, implementar
+
+Depois de especificar, planejar e quebrar em tarefas, a conversa que produziu isso já não é
+necessária para implementar: o que importa está nos arquivos. Limpar o contexto ali é o corte
+mais barato do fluxo — **desde que nada tenha ficado só na conversa.**
+
+1. Plano aprovado e arquivos salvos.
+2. Rode a skill **`checkpoint-contexto`**: ela levanta decisões, esclarecimentos do usuário,
+   premissas, descobertas e pendências, confere cada uma contra os arquivos, escreve o que
+   faltar e responde ao teste *"se eu esquecesse esta conversa, os arquivos contam a história
+   toda?"*. Só com **"Pode limpar."** o usuário dá `/clear`.
+3. Sessão nova: `/implement <slug>` (ou o equivalente do projeto) relê spec, plano e tarefas.
+
+Não limpe no meio de uma investigação de bug ou de uma decisão em aberto: ali o contexto é o
+trabalho. Quem executa `/clear` é o usuário; a sessão só valida e avisa.
+
 ## Como cada subagente funciona (memória e disparo)
 
 - **Contexto isolado.** O subagente não vê a conversa. Ele começa com: o corpo do seu `.md`

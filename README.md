@@ -112,6 +112,13 @@ A economia corta desperdício, não verificação. Permanecem sem exceção: esp
 antes do código, TDD, verificação executada de verdade, `code-review` e `security-review` ao
 fim de mudança de código, e advisor antes do plano e antes de declarar a tarefa concluída.
 
+**Limpar o contexto entre planejar e implementar.** Depois que spec, plano e tarefas estão em
+arquivo, a conversa que os produziu deixa de ser necessária. O corte é `plano aprovado,
+checkpoint, /clear, implementar`. O risco é decisão tomada na conversa e não escrita: a skill
+`checkpoint-contexto` levanta decisões, esclarecimentos do usuário, premissas, descobertas e
+pendências, confere cada uma contra os arquivos, escreve o que faltar e só libera a limpeza
+quando o teste *"se eu esquecesse esta conversa, os arquivos contam a história toda?"* passa.
+
 **Esforço (`effort`).** `high` fica onde a qualidade se decide: ideação, especificação, plano,
 revisão e depuração. O laço de implementação, quando já existe especificação e plano
 aprovados, roda em `medium`, com o TDD como rede de segurança. Um comando ou skill pode
@@ -151,6 +158,7 @@ permite encerrar uma sessão com `/clear` sem perder o fio.
 | <img src="docs/assets/icons/analise-mercado.svg" width="20" alt=""> | `analise-mercado` | Avalia uma ideia antes da construção: concorrência, preços, tendências, lacunas, demanda e riscos. Produz um veredito e uma especificação inicial. |
 | <img src="docs/assets/icons/code-review.svg" width="20" alt=""> | `code-review` | Revisão de correção lógica, design, legibilidade, desempenho e testes. |
 | <img src="docs/assets/icons/security-review.svg" width="20" alt=""> | `security-review` | Revisão adversarial de autorização, injeção, segredos, exposição de dados, autenticação, SSRF, upload e criptografia. |
+|  | `checkpoint-contexto` | Antes de `/clear` ou `/compact`: confere se decisões, esclarecimentos e próximo passo estão em arquivo, completa o que faltar e entrega um relatório de validação. |
 | <img src="docs/assets/icons/migracao.svg" width="20" alt=""> | `migracao` | Planejamento de migração de sistemas legados: inventário, estratégia de corte, migração de dados e rollback. |
 
 <details>
