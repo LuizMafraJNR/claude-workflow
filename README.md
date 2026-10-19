@@ -101,7 +101,7 @@ de modelo:
 | Padrão | Sintoma medido | Correção adotada |
 |---|---|---|
 | Sessão principal que nunca encerra | Contexto de 1 milhão de tokens ou mais; 1.800 chamadas em uma sessão | Uma feature por sessão, `/clear` ao terminar; `autoCompactWindow: 400000` como freio |
-| Worker com escopo de feature inteira | 17 de 86 subagentes passaram de 100 chamadas; o maior teve 402 e 700 mil tokens de contexto | Um worker por **tarefa**; `maxTurns: 80`; o worker para num ponto estável e reporta |
+| Worker com escopo de vários lotes de tarefas | 17 de 86 subagentes passaram de 100 chamadas (16 deles `worker`); o maior teve 402 e 700 mil tokens de contexto | Um worker por **tarefa**; `maxTurns: 80`; o worker para num ponto estável e reporta |
 | Advisor chamado com a sessão inchada | O advisor recebe a conversa inteira a cada chamada | Chamar cedo; uma vez por feature no fim; compactar antes se passar de ~300 mil tokens |
 
 Delegar **não** é o problema: um subagente começa com cerca de 20 mil tokens (mediana medida) e
